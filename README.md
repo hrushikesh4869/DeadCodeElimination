@@ -8,9 +8,13 @@ The Dead Code Elimination (DCE) is an optimization technique used in compilers t
 Pass uses Liveliness analysis information to identify and eliminate dead instructions. This information is calculated per instruction basis. Following sections explains how liveliness analysis information is calculated and used to eliminate dead code.
 #### Liveliness analysis
 Here are some definitions before going into algorithm.
+
 USE set : All variables which are used in current basic block prior to any assignment to them.
+
 DEF set : All variables which are defined in current basic block.
-IN set : IN set of basic block is set of all variables which are alive at the start of that basic block
+
+IN set : IN set of basic block is set of all variables which are alive at the start of that basic block.
+
 OUT set : OUT set of basic block is set of all variables which are alive at the end of that basic block.
 
 *Algorithm :*
