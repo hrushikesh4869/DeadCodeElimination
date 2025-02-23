@@ -156,13 +156,11 @@ bool removeDeadBB(Function &F) {
         if(!BI)
             continue;
 
-        if(BI->isUnconditional()) {
-            BasicBlock *Succ = BI->getSuccessor(0);
-            Succ->removePredecessor(BB);
-            BB->replaceAllUsesWith(Succ);
-            BB->eraseFromParent();
-            change = true;
-        }
+        BasicBlock *Succ = BI->getSuccessor(0);
+        Succ->removePredecessor(BB);
+        BB->replaceAllUsesWith(Succ);
+        BB->eraseFromParent();
+        change = true;
     }
     return change;
 }

@@ -2,10 +2,10 @@
 # Dead Code Elimination Pass.
 
 ### Overview
-The Dead Code Elimination (DCE) is an optimization technique used in compilers to remove code that does not affect the program's observable behavior. This LLVM pass implements DCE optimization using Liveliness analysis. It eliminates dead code, simplifies control flow by eliminating empty basic blocks.
+The Dead Code Elimination (DCE) is an optimization technique used in compilers to remove code that does not affect the program's observable behavior. This LLVM pass implements DCE optimization using Liveliness analysis. It eliminates dead code and simplifies control flow by eliminating empty basic blocks.
 
 ### How it works
-Pass uses Liveliness analysis information to identify and eliminate dead instructions. This information is calculated per instruction basis. Following sections explains how liveliness analysis information is calculated and used to eliminate dead code.
+Pass uses Liveliness analysis information to identify and eliminate dead instructions. This information is calculated for each instruction. Following sections explain how liveliness analysis information is calculated and used to eliminate dead code.
 #### Liveliness analysis
 Here are some definitions before going into algorithm.
 
@@ -31,7 +31,7 @@ OUT set : OUT set of basic block is set of all variables which are alive at the 
 An instruction is considered dead if it is in its DEF set but not present in its OUT set.
 
 #### Eliminating empty basic blocks
-After removing dead instructions there might be some empty basic blocks in CFG. To remove such basic blocks pass simply traverses the CFG and look for blocks with size one and containing branch instruction as a terminator instruction. To delete the block, pass simply redirects the control flow and replaces all the uses of current basic block with its successor.
+After removing dead instructions there might be some empty basic blocks in CFG. To remove such basic blocks pass simply traverses the CFG and looks for blocks with size one and containing branch instruction as a terminator instruction. To delete the block, pass simply redirects the control flow and replaces all the uses of current basic block with its successor.
 
 #### Handling branches after deleting empty basic blocks
 After eliminating empty blocks there might arise some conditional branch instructions where both the target blocks in that branch are same. As shown in following example : 
@@ -50,7 +50,7 @@ cond.end:
 }
 ```
 
-In such cases branch instruction's condition variable is redundant. Simply setting that variable to a constant offers more chances to eliminate dead code. Following is a resulting code after setting condition variable in branch to true and eliminating dead code.
+In such cases branch instruction's condition variable is redundant. Simply setting that variable to a constant offers more chances to eliminate dead code. Following is a resulting code after setting condition variable in branch to constant and eliminating dead code.
 
 ```llvm
 define i32 @main(i32 %argc, ptr %argv) {
@@ -65,9 +65,12 @@ cond.end:
 Finally dead alloca slots are eliminated for those variables which are not used anywhere in the CFG.
 ### Requirements to build and run pass
 
-Operatin system :  Ubuntu version "24.04.2 LTS (Noble Numbat)". 
+Operating system :  Ubuntu version "24.04.2 LTS (Noble Numbat)".
+
 LLVM version used : Ubuntu LLVM version 18.1.3
+
 CMake version : cmake version 3.28.3
+
 
 Installing LLVM and CMake on Ubuntu : 
 ```bash
